@@ -1,0 +1,26 @@
+<annotation verified="yes">
+	<folder>result</folder>
+	<filename>1-71-004.jpg</filename>
+	<path>D:\Project\YoutubeData\result\1-71-004.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1280</width>
+		<height>720</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>runway</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>935</xmin>
+			<ymin>325</ymin>
+			<xmax>976</xmax>
+			<ymax>357</ymax>
+		</bndbox>
+	</object>
+</annotation>
