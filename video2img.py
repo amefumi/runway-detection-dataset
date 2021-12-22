@@ -1,6 +1,7 @@
 import os
 import numpy
 import pandas as pd
+import re
 
 
 def command(start_time: str, file_name: str, duration: float, frames: float, index: int, series: int):
@@ -27,14 +28,68 @@ def ffmpeg_execute():
         os.system(ffmpeg_cmd)
 
 
-def train_test_div(n_videos=101, train_rate=0.8):
+def train_test_div(n_videos=101, train_rate=0.7):
+    train_n = numpy.random.choice(n_videos, int(n_videos * train_rate), replace=False)  # 选取作为训练集的视频的序号
+    print('Train Set No. (Total = {}) = '.format(len(train_n)), train_n)
+
     xml_labeled = os.listdir('labels')
-    image_labeled = []
+    image_train = []
+    image_train_far = []
+    image_train_near = []
+    image_test = []
+    image_test_far = []
+    image_test_near = []
+
     for i in xml_labeled:
-        image_labeled.append(i[:-3] + "jpg")  # 修改已标注图片列表中的后缀为jpg
-    print(image_labeled)
-    train_n = numpy.random.choice(n_videos, int(n_videos * train_rate), replace=False)
-    print(train_n)
+        image_name = i[:-4]
+        p_video = re.findall(r'-(.*?)-', i)
+        if int(p_video[0]) in train_n:
+            image_train.append(image_name)
+            if i[0] == '0':
+                image_train_far.append(image_name)
+            else:
+                image_train_near.append(image_name)
+        else:
+            image_test.append(image_name)
+            if i[0] == '0':
+                image_test_far.append(image_name)
+            else:
+                image_test_near.append(image_name)
+    print(image_train)
+    image_train_txt = open('train.txt', 'w')
+    for i in image_train:
+        image_train_txt.write(i + '\n')
+    image_train_txt.close()
+
+    print(image_train_far)
+    image_train_far_txt = open('train_far.txt', 'w')
+    for i in image_train_far:
+        image_train_far_txt.write(i + '\n')
+    image_train_far_txt.close()
+
+    print(image_train_near)
+    image_train_near_txt = open('train_near.txt', 'w')
+    for i in image_train_near:
+        image_train_near_txt.write(i + '\n')
+    image_train_near_txt.close()
+
+    print(image_test)
+    image_test_txt = open('test.txt', 'w')
+    for i in image_test:
+        image_test_txt.write(i + '\n')
+    image_test_txt.close()
+
+    print(image_test_far)
+    image_test_far_txt = open('test_far.txt', 'w')
+    for i in image_test_far:
+        image_test_far_txt.write(i + '\n')
+    image_test_far_txt.close()
+
+    print(image_test_near)
+    image_test_near_txt = open('test_near.txt', 'w')
+    for i in image_test_near:
+        image_test_near_txt.write(i + '\n')
+    image_test_near_txt.close()
 
 
 if __name__ == '__main__':
