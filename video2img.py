@@ -1,3 +1,4 @@
+from msilib.schema import CompLocator
 import os
 import numpy
 import pandas as pd
@@ -10,7 +11,8 @@ def command(start_time: str, file_name: str, duration: float, frames: float, ind
 
 
 def list_video():
-    file_name = [videos for videos in os.listdir() if videos.endswith('.mp4')]  # 得到所有文件的列表
+    file_name = [videos for videos in os.listdir(
+    ) if videos.endswith('.mp4')]  # 得到所有文件的列表
     df = pd.DataFrame(file_name, columns=['file_name'])
     df.to_excel('video.xlsx')
 
@@ -28,8 +30,21 @@ def ffmpeg_execute():
         os.system(ffmpeg_cmd)
 
 
+def ffmpeg_execute_lane():
+    df = pd.read_excel('video_label_lane.xlsx', index_col=0)
+    command_list = []
+    for index, rows in df.iterrows():
+        command_list.append(
+            command(rows['start_time_1'], rows['file_name'],
+                    rows['duration_1'], rows['frames_1'], index, 2)
+        )
+    for ffmpeg_cmd in command_list:
+        os.system(ffmpeg_cmd)
+
+
 def train_test_div(n_videos=101, train_rate=0.7):
-    train_n = numpy.random.choice(n_videos, int(n_videos * train_rate), replace=False)  # 选取作为训练集的视频的序号
+    train_n = numpy.random.choice(n_videos, int(
+        n_videos * train_rate), replace=False)  # 选取作为训练集的视频的序号
     print('Train Set No. (Total = {}) = '.format(len(train_n)), train_n)
 
     xml_labeled = os.listdir('labels')
@@ -93,4 +108,4 @@ def train_test_div(n_videos=101, train_rate=0.7):
 
 
 if __name__ == '__main__':
-    train_test_div()
+    ffmpeg_execute_lane()
